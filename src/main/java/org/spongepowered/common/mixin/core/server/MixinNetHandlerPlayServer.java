@@ -26,6 +26,7 @@ package org.spongepowered.common.mixin.core.server;
 
 import static org.spongepowered.common.util.SpongeCommonTranslationHelper.t;
 
+import com.flowpowered.math.vector.Vector3d;
 import io.netty.buffer.Unpooled;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.entity.Entity;
@@ -35,6 +36,7 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
@@ -45,14 +47,19 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.event.SpongeEventFactory;
+import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.net.ChannelBuf;
 import org.spongepowered.api.net.PlayerConnection;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.common.Sponge;
 import org.spongepowered.common.interfaces.IMixinNetworkManager;
 
 import java.net.InetSocketAddress;
@@ -187,4 +194,56 @@ public abstract class MixinNetHandlerPlayServer implements PlayerConnection {
 
     }
 
+    private Location newLocationTmp;
+    private Vector3d newRotationTmp;
+
+    @Inject(method = "processPlayer", at = @At(value = "HEAD"), cancellable = true)
+    public void injectPlayerMove(C03PacketPlayer packetIn, CallbackInfo ci) {
+        if (playerEntity.mcServer.isCallingFromMinecraftThread()) {
+            if (packetIn.isMoving() && (
+                    playerEntity.lastTickPosX != packetIn.getPositionX() ||
+                    playerEntity.lastTickPosY != packetIn.getPositionY() ||
+                    playerEntity.lastTickPosZ != packetIn.getPositionZ()
+            )) {
+                Location oldLocation = new Location(
+                        (World) playerEntity.getEntityWorld(),
+                        playerEntity.lastTickPosX,
+                        playerEntity.lastTickPosY,
+                        playerEntity.lastTickPosZ);
+                Location newLocation = new Location(
+                        (World) playerEntity.getEntityWorld(),
+                        packetIn.getPositionX(),
+                        packetIn.getPositionY(),
+                        packetIn.getPositionZ());
+                PlayerMoveEvent event = SpongeEventFactory.createPlayerMove(
+                        Sponge.getGame(),
+                        (Player) playerEntity,
+                        oldLocation,
+                        newLocation,
+                        new Vector3d(playerEntity.rotationYaw, playerEntity.rotationPitch, 0));
+
+                if (Sponge.getGame().getEventManager().post(event)) {
+                    ci.cancel();
+                    ((Player) playerEntity).setLocation(event.getOldLocation());
+                }
+
+                newLocationTmp = event.getNewLocation();
+                newRotationTmp = event.getRotation();
+            }
+        }
+    }
+
+    @Inject(method = "processPlayer", at = @At(value = "RETURN"))
+    public void injectPlayerMoveNewLocation(C03PacketPlayer packetIn, CallbackInfo ci) {
+        if (newLocationTmp != null) {
+            ((Player) playerEntity).setLocation(newLocationTmp);
+        }
+
+        if (newRotationTmp != null) {
+            ((Player) playerEntity).setRotation(newRotationTmp);
+        }
+
+        newLocationTmp = null;
+        newRotationTmp = null;
+    }
 }
