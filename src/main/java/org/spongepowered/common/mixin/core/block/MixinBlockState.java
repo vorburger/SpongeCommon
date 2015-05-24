@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateBase;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -40,9 +41,12 @@ import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.data.BlockPropertyMapper;
 import org.spongepowered.common.data.SpongeBlockStateBuilder;
 import org.spongepowered.common.data.SpongeManipulatorRegistry;
 import org.spongepowered.common.interfaces.block.IMixinBlock;
+
+import java.util.Map;
 
 @NonnullByDefault
 @Mixin(net.minecraft.block.state.BlockState.StateImplementation.class)
@@ -53,7 +57,7 @@ public abstract class MixinBlockState extends BlockStateBase implements BlockSta
     private final ImmutableMap properties = null;
     @Shadow private final Block block = null;
 
-    private ImmutableList<DataManipulator<?>> manipulators;
+    private ImmutableList<DataManipulator<?>> manipulators = BlockPropertyMapper.fromPropertyMap(properties);
 
     @Override
     public BlockType getType() {
