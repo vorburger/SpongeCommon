@@ -34,6 +34,8 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.Packet;
 import net.minecraft.profiler.Profiler;
@@ -75,6 +77,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldBorder;
 import org.spongepowered.api.world.WorldCreationSettings;
+import org.spongepowered.api.world.biome.BiomeGenerationSettings;
 import org.spongepowered.api.world.biome.BiomeType;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.BiomeGenerator;
@@ -117,6 +120,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -135,6 +139,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
     private volatile Context worldContext;
     private ImmutableList<Populator> populators;
     private ImmutableList<GeneratorPopulator> generatorPopulators;
+    private ImmutableMap<BiomeType, BiomeGenerationSettings> biomeOverrides;
 
     protected SpongeScoreboard spongeScoreboard = new SpongeScoreboard();
 
@@ -558,7 +563,8 @@ public abstract class MixinWorld implements World, IMixinWorld {
                 SpongeBiomeGenerator.of(getWorldChunkManager()),
                 SpongeGeneratorPopulator.of(world, serverChunkProvider.serverChunkGenerator),
                 getGeneratorPopulators(),
-                getPopulators());
+                getPopulators(),
+                getBiomeOverrides());
     }
     
     @Override
@@ -601,6 +607,14 @@ public abstract class MixinWorld implements World, IMixinWorld {
             this.generatorPopulators = ImmutableList.of();
         }
         return this.generatorPopulators;
+    }
+    
+    @Override
+    public Map<BiomeType, BiomeGenerationSettings> getBiomeOverrides() {
+        if(this.biomeOverrides == null) {
+            this.biomeOverrides = ImmutableMap.of();
+        }
+        return this.biomeOverrides;
     }
 
     @Override
