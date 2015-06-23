@@ -24,15 +24,10 @@
  */
 package org.spongepowered.common.mixin.core.world;
 
-import org.spongepowered.common.interfaces.gen.IPopulatorOwner;
-
-import org.spongepowered.common.world.gen.CustomChunkProviderGenerate;
-import org.spongepowered.common.world.gen.SpongeGeneratorPopulator;
-import org.spongepowered.common.world.gen.SpongeBiomeGenerator;
-import org.spongepowered.common.world.gen.CustomWorldChunkManager;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.spongepowered.common.data.DataTransactionBuilder.builder;
+
 import com.flowpowered.math.vector.Vector2i;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
@@ -106,8 +101,8 @@ import org.spongepowered.common.interfaces.IMixinWorld;
 import org.spongepowered.common.interfaces.IMixinWorldSettings;
 import org.spongepowered.common.interfaces.IMixinWorldType;
 import org.spongepowered.common.interfaces.block.IMixinBlock;
+import org.spongepowered.common.interfaces.gen.IPopulatorOwner;
 import org.spongepowered.common.scoreboard.SpongeScoreboard;
-import org.spongepowered.common.interfaces.IPopulatorOwner;
 import org.spongepowered.common.util.SpongeHooks;
 import org.spongepowered.common.util.VecHelper;
 import org.spongepowered.common.world.border.PlayerBorderListener;
@@ -726,42 +721,6 @@ public abstract class MixinWorld implements World, IMixinWorld {
     @Override
     public boolean containsBlock(int x, int y, int z) {
         return VecHelper.inBounds(x, y, z, BLOCK_MIN, BLOCK_MAX);
-    }
-
-    @Override
-    public void setWorldGenerator(WorldGenerator generator) {
-        // Replace biome generator with possible modified one
-        BiomeGenerator biomeGenerator = generator.getBiomeGenerator();
-        WorldServer thisWorld = (WorldServer) (Object) this;
-        thisWorld.provider.worldChunkMgr = CustomWorldChunkManager.of(biomeGenerator);
-
-        // Replace generator populator with possibly modified one
-        GeneratorPopulator generatorPopulator = generator.getBaseGeneratorPopulator();
-        replaceChunkGenerator(CustomChunkProviderGenerate.of(thisWorld, generatorPopulator, biomeGenerator));
-
-        // Replace populators with possibly modified list
-        this.populators = ImmutableList.copyOf(generator.getPopulators());
-        this.generatorPopulators = ImmutableList.copyOf(generator.getGeneratorPopulators());
-    }
-
-    @Override
-    public WorldGenerator getWorldGenerator() {
-        // We have to create a new instance every time to satisfy the contract
-        // of this method, namely that changing the state of the returned
-        // instance does not affect the world without setWorldGenerator being
-        // called
-        ChunkProviderServer serverChunkProvider = (ChunkProviderServer) this.getChunkProvider();
-        WorldServer world = (WorldServer) (Object) this;
-        return new SpongeWorldGenerator(
-                SpongeBiomeGenerator.of(getWorldChunkManager()),
-                SpongeGeneratorPopulator.of(world, serverChunkProvider.serverChunkGenerator),
-                this.generatorPopulators,
-                this.populators);
-    }
-
-    private void replaceChunkGenerator(IChunkProvider provider) {
-        ChunkProviderServer chunkProviderServer = (ChunkProviderServer) this.getChunkProvider();
-        chunkProviderServer.serverChunkGenerator = provider;
     }
 
     private void checkBiomeBounds(int x, int z) {
