@@ -40,6 +40,7 @@ import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
@@ -54,6 +55,7 @@ import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.network.ChannelBuf;
 import org.spongepowered.api.network.PlayerConnection;
 import org.spongepowered.api.text.format.TextColors;
@@ -65,6 +67,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import org.spongepowered.common.Sponge;
+import org.spongepowered.common.event.SpongeImplEventFactory;
 import org.spongepowered.common.interfaces.IMixinNetworkManager;
 import org.spongepowered.common.text.SpongeTexts;
 
@@ -72,6 +75,7 @@ import java.net.InetSocketAddress;
 
 @Mixin(NetHandlerPlayServer.class)
 public abstract class MixinNetHandlerPlayServer implements PlayerConnection {
+
     @Shadow private static Logger logger;
 
     @Shadow public NetworkManager netManager;
@@ -237,6 +241,38 @@ public abstract class MixinNetHandlerPlayServer implements PlayerConnection {
             + "(Ljava/lang/String;)Ljava/lang/String;", remap = false))
     public String dontNormalizeStringBecauseSomeMojangDevSucks(String input) {
         return input;
+    }
+
+    private ChatComponentTranslation tmpQuitMessage;
+
+    /**
+     * @author Simon816
+     *
+     * Store the quit message and ServerConfigurationManager instance for use in
+     * {@link #onDisconnectPlayer}.
+     */
+    @Redirect(method = "onDisconnect", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/server/management/ServerConfigurationManager;sendChatMsg(Lnet/minecraft/util/IChatComponent;)V"))
+    public void onSendChatMsgCall(ServerConfigurationManager thisCtx, IChatComponent chatcomponenttranslation) {
+        this.tmpQuitMessage = (ChatComponentTranslation) chatcomponenttranslation;
+    }
+
+    /**
+     * @author Simon816
+     *
+     * Fire the PlayerQuitEvent before playerLoggedOut is called in order for
+     * event handlers to change the quit message captured from
+     * {@link #onSendChatMsgCall}.
+     */
+    @Inject(method = "onDisconnect", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/server/management/ServerConfigurationManager;playerLoggedOut(Lnet/minecraft/entity/player/EntityPlayerMP;)V"))
+    public void onDisconnectPlayer(IChatComponent reason, CallbackInfo ci) {
+        PlayerQuitEvent event =
+                SpongeImplEventFactory.createPlayerQuit(Sponge.getGame(), (Player) this.playerEntity, SpongeTexts.toText(this.tmpQuitMessage),
+                        ((Player) this.playerEntity).getMessageSink());
+        this.tmpQuitMessage = null;
+        Sponge.getGame().getEventManager().post(event);
+        event.getSink().sendMessage(event.getNewMessage());
     }
 
 }
