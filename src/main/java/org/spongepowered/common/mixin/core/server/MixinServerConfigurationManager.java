@@ -265,7 +265,6 @@ public abstract class MixinServerConfigurationManager implements IMixinServerCon
         }
         playerIn.setPosition(tempPos.getX(), tempPos.getY(), tempPos.getZ());
 
-
         // ### PHASE 2 ### Remove player from current dimension
         playerIn.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(playerIn);
         playerIn.getServerForPlayer().getEntityTracker().untrackEntity(playerIn);
@@ -345,9 +344,12 @@ public abstract class MixinServerConfigurationManager implements IMixinServerCon
         // Use data attached to the player if possible
         Optional<RespawnLocationData> optRespawn = ((Player) playerIn).getData(RespawnLocationData.class);
         if (optRespawn.isPresent()) {
-            // API TODO: Make this support multiple world spawn points
             // TODO Make RespawnLocationData 'shadow' the bed location from below
-            return optRespawn.get().getRespawnLocation();
+            Optional<Vector3d> optPosition = optRespawn.get().getRespawnPosition(((World) targetWorld).getUniqueId());
+            if (optPosition.isPresent()) {
+                // Player has respawn data for target world, use it
+                return new Location((World) targetWorld, optPosition.get());
+            }
         }
         Vector3d spawnPos = null;
         BlockPos bedLoc = ((IMixinEntityPlayer) playerIn).getBedLocation(targetDimension);
