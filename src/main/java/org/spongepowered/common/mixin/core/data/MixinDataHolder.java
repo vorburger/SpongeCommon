@@ -31,14 +31,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.api.data.DataHolder;
-import org.spongepowered.api.data.DataManipulator;
-import org.spongepowered.api.data.DataManipulatorBuilder;
+import org.spongepowered.api.data.manipulator.DataManipulator;
+import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.data.DataPriority;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.Property;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.data.DataTransactionBuilder;
-import org.spongepowered.common.data.SpongeDataProcessor;
+import org.spongepowered.api.data.DataTransactionBuilder;
+import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.SpongeManipulatorRegistry;
 
 import java.util.Collection;
@@ -48,7 +48,7 @@ public abstract class MixinDataHolder implements DataHolder {
 
     @Override
     public <T extends DataManipulator<T>> Optional<T> getData(Class<T> dataClass) {
-        Optional<SpongeDataProcessor<T>> builderOptional = SpongeManipulatorRegistry.getInstance().getUtil(dataClass);
+        Optional<DataProcessor<T>> builderOptional = SpongeManipulatorRegistry.getInstance().getUtil(dataClass);
         if (builderOptional.isPresent()) {
             return builderOptional.get().getFrom(this);
         }
@@ -66,7 +66,7 @@ public abstract class MixinDataHolder implements DataHolder {
 
     @Override
     public <T extends DataManipulator<T>> boolean remove(Class<T> manipulatorClass) {
-        Optional<SpongeDataProcessor<T>> utilOptional = SpongeManipulatorRegistry.getInstance().getUtil(manipulatorClass);
+        Optional<DataProcessor<T>> utilOptional = SpongeManipulatorRegistry.getInstance().getUtil(manipulatorClass);
         if (utilOptional.isPresent()) {
             return utilOptional.get().remove(this);
         }
@@ -86,7 +86,7 @@ public abstract class MixinDataHolder implements DataHolder {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends DataManipulator<T>> DataTransactionResult offer(T manipulatorData, DataPriority priority) {
-        Optional<SpongeDataProcessor<T>> setterOptional = SpongeManipulatorRegistry.getInstance().getUtil((Class<T>) (Class) manipulatorData
+        Optional<DataProcessor<T>> setterOptional = SpongeManipulatorRegistry.getInstance().getUtil((Class<T>) (Class) manipulatorData
                 .getClass());
         if (setterOptional.isPresent()) {
             return setterOptional.get().setData(this, manipulatorData, priority);
