@@ -116,7 +116,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.common.Sponge;
 import org.spongepowered.common.configuration.SpongeConfig;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.SpongeManipulatorRegistry;
 import org.spongepowered.common.effect.particle.SpongeParticleEffect;
 import org.spongepowered.common.effect.particle.SpongeParticleHelper;
@@ -647,7 +647,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
 
     @Override
     public <T extends DataManipulator<T>> Optional<T> getData(int x, int y, int z, Class<T> dataClass) {
-        Optional<SpongeBlockProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(dataClass);
+        Optional<BlockDataProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(dataClass);
         if (blockUtilOptional.isPresent()) {
             return blockUtilOptional.get().fromBlockPos((net.minecraft.world.World) (Object) this, new BlockPos(x, y, z));
         }
@@ -657,7 +657,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
 
     @Override
     public <T extends DataManipulator<T>> Optional<T> getOrCreate(int x, int y, int z, Class<T> manipulatorClass) {
-        Optional<SpongeBlockProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(manipulatorClass);
+        Optional<BlockDataProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(manipulatorClass);
         if (blockUtilOptional.isPresent()) {
             Optional<T> data = blockUtilOptional.get().fromBlockPos((net.minecraft.world.World) (Object) this, new BlockPos(x, y, z));
             if (!data.isPresent() && blockUtilOptional.get() instanceof DataManipulatorBuilder) {
@@ -670,7 +670,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
 
     @Override
     public <T extends DataManipulator<T>> boolean remove(int x, int y, int z, Class<T> manipulatorClass) {
-        Optional<SpongeBlockProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(manipulatorClass);
+        Optional<BlockDataProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil(manipulatorClass);
         return blockUtilOptional.isPresent() && blockUtilOptional.get().remove((net.minecraft.world.World) ((Object) this), new BlockPos(x, y, z));
     }
 
@@ -678,7 +678,7 @@ public abstract class MixinWorld implements World, IMixinWorld {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends DataManipulator<T>> DataTransactionResult offer(int x, int y, int z, T manipulatorData, DataPriority priority) {
-        Optional<SpongeBlockProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil((Class<T>) (Class) manipulatorData
+        Optional<BlockDataProcessor<T>> blockUtilOptional = SpongeManipulatorRegistry.getInstance().getBlockUtil((Class<T>) (Class) manipulatorData
                 .getClass());
         if (blockUtilOptional.isPresent()) {
             return blockUtilOptional.get().setData((net.minecraft.world.World) ((Object) this), new BlockPos(x, y, z), manipulatorData, priority);

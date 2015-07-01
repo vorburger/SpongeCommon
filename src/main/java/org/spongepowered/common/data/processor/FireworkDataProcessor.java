@@ -53,12 +53,12 @@ public class FireworkDataProcessor implements DataProcessor<FireworkData> {
     }
 
     @Override
-    public Optional<FireworkData> fillData(DataHolder dataHolder, FireworkData manipulator, DataPriority priority) {
+    public Optional<FireworkData> fillData(DataHolder dataHolder, FireworkData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, FireworkData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, FireworkData manipulator) {
         if (checkNotNull(dataHolder) instanceof EntityFireworkRocket) {
             final ItemStack firework = ((EntityFireworkRocket) dataHolder).getDataWatcher().getWatchableObjectItemStack(8);
         }

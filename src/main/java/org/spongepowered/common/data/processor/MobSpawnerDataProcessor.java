@@ -30,6 +30,7 @@ import org.spongepowered.api.data.DataPriority;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.MobSpawnerData;
+import org.spongepowered.api.data.manipulator.mutable.MobSpawnerData;
 import org.spongepowered.api.service.persistence.InvalidDataException;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.SpongeMobSpawnerData;
@@ -42,12 +43,12 @@ public class MobSpawnerDataProcessor implements DataProcessor<MobSpawnerData> {
     }
 
     @Override
-    public Optional<MobSpawnerData> fillData(DataHolder dataHolder, MobSpawnerData manipulator, DataPriority priority) {
+    public Optional<MobSpawnerData> fillData(DataHolder dataHolder, MobSpawnerData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, MobSpawnerData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, MobSpawnerData manipulator) {
         return null;
     }
 

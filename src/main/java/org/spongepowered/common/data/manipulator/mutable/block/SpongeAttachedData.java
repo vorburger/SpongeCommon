@@ -26,27 +26,27 @@ package org.spongepowered.common.data.manipulator.mutable.block;
 
 import static org.spongepowered.api.data.DataQuery.of;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.MemoryDataContainer;
-import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.immutable.block.ImmutableAttachedData;
 import org.spongepowered.api.data.manipulator.mutable.block.AttachedData;
-import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.manipulator.AbstractMutableData;
-
-import javax.annotation.Nullable;
 
 public class SpongeAttachedData extends AbstractMutableData<AttachedData, ImmutableAttachedData> implements AttachedData {
 
     public static final DataQuery ATTACHED = of("Attached");
 
+    private boolean attached;
+
     public SpongeAttachedData() {
         super(AttachedData.class);
+    }
+
+    public SpongeAttachedData setAttached(boolean attached) {
+        this.attached = attached;
+        return this;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BeaconDataProcessor implements DataProcessor<BeaconData> {
     }
 
     @Override
-    public Optional<BeaconData> fillData(DataHolder dataHolder, BeaconData manipulator, DataPriority priority) {
+    public Optional<BeaconData> fillData(DataHolder dataHolder, BeaconData manipulator) {
         return null;
     }
 
@@ -66,7 +66,7 @@ public class BeaconDataProcessor implements DataProcessor<BeaconData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, BeaconData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, BeaconData manipulator) {
         return null;
     }
 

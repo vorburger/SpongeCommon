@@ -52,7 +52,7 @@ public class AgressiveDataProcessor implements DataProcessor<AggressiveData> {
     }
 
     @Override
-    public Optional<AggressiveData> fillData(DataHolder dataHolder, AggressiveData manipulator, DataPriority priority) {
+    public Optional<AggressiveData> fillData(DataHolder dataHolder, AggressiveData manipulator) {
         checkNotNull(manipulator);
         if (dataHolder instanceof IMixinAggressive) {
             switch (checkNotNull(priority)) {
@@ -69,7 +69,7 @@ public class AgressiveDataProcessor implements DataProcessor<AggressiveData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, AggressiveData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, AggressiveData manipulator) {
         checkNotNull(manipulator);
         if (checkNotNull(dataHolder) instanceof IMixinAggressive) {
             switch (checkNotNull(priority)) {

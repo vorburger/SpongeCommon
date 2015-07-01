@@ -46,13 +46,13 @@ import org.spongepowered.common.item.merchant.SpongeTradeOfferBuilder;
 public class TradeOfferProcessor implements DataProcessor<TradeOfferData> {
 
     @Override
-    public Optional<TradeOfferData> fillData(DataHolder dataHolder, TradeOfferData manipulator, DataPriority priority) {
+    public Optional<TradeOfferData> fillData(DataHolder dataHolder, TradeOfferData manipulator) {
         return Optional.absent(); // todo
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, TradeOfferData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, TradeOfferData manipulator) {
         checkNotNull(manipulator);
         checkNotNull(priority);
         if (checkNotNull(dataHolder) instanceof EntityVillager) {

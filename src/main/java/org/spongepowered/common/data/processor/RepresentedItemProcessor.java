@@ -50,13 +50,13 @@ import org.spongepowered.common.item.SpongeItemStackBuilder;
 public class RepresentedItemProcessor implements DataProcessor<RepresentedItemData> {
 
     @Override
-    public Optional<RepresentedItemData> fillData(DataHolder dataHolder, RepresentedItemData manipulator, DataPriority priority) {
+    public Optional<RepresentedItemData> fillData(DataHolder dataHolder, RepresentedItemData manipulator) {
         // todo
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, RepresentedItemData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, RepresentedItemData manipulator) {
         if (dataHolder instanceof EntityItem) {
             final ItemStack underlying = ((ItemStack) ((EntityItem) dataHolder).getEntityItem());
             final ItemStack clone = new SpongeItemStackBuilder().fromItemStack(underlying).build();

@@ -51,7 +51,7 @@ public class CriticalDataProcessor implements DataProcessor<CriticalHitData> {
     }
 
     @Override
-    public Optional<CriticalHitData> fillData(DataHolder dataHolder, CriticalHitData manipulator, DataPriority priority) {
+    public Optional<CriticalHitData> fillData(DataHolder dataHolder, CriticalHitData manipulator) {
         if (!(dataHolder instanceof EntityArrow)) {
             return Optional.absent();
         }
@@ -59,7 +59,7 @@ public class CriticalDataProcessor implements DataProcessor<CriticalHitData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, CriticalHitData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, CriticalHitData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityArrow)) {
             return fail(manipulator);
         }

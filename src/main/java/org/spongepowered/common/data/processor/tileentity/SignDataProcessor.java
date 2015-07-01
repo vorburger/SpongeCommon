@@ -82,12 +82,12 @@ public class SignDataProcessor implements DataProcessor<SignData> {
     }
 
     @Override
-    public Optional<SignData> fillData(DataHolder dataHolder, SignData manipulator, DataPriority priority) {
+    public Optional<SignData> fillData(DataHolder dataHolder, SignData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, SignData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, SignData manipulator) {
         if (dataHolder instanceof TileEntitySign) {
             final Optional<SignData> oldData = ((Sign) dataHolder).getData();
             if (oldData.isPresent()) {

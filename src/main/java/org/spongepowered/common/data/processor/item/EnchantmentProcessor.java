@@ -47,7 +47,7 @@ import java.util.Map;
 public class EnchantmentProcessor implements DataProcessor<EnchantmentData> {
 
     @Override
-    public Optional<EnchantmentData> fillData(DataHolder dataHolder, EnchantmentData manipulator, DataPriority priority) {
+    public Optional<EnchantmentData> fillData(DataHolder dataHolder, EnchantmentData manipulator) {
         if (dataHolder instanceof ItemStack && ((ItemStack) dataHolder).isItemEnchanted()) {
             NBTTagList compound = ((ItemStack) dataHolder).getEnchantmentTagList();
             Map<Enchantment, Integer> enchantmentIntegerMap = Maps.newHashMap();
@@ -67,7 +67,7 @@ public class EnchantmentProcessor implements DataProcessor<EnchantmentData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, EnchantmentData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, EnchantmentData manipulator) {
         if (dataHolder instanceof ItemStack && ((ItemStack) dataHolder).isItemEnchanted()) {
             NBTTagList compound = ((ItemStack) dataHolder).getEnchantmentTagList();
             Map<Enchantment, Integer> enchantmentIntegerMap = Maps.newHashMap();

@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.data.processor.block;
 
-import static org.spongepowered.api.data.DataTransactionBuilder.fail;
+import static org.spongepowered.api.data.DataTransactionBuilder.failResult;
 
 import com.google.common.base.Optional;
 import net.minecraft.block.state.IBlockState;
@@ -32,26 +32,28 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.DataHolder;
-import org.spongepowered.api.data.DataPriority;
+import org.spongepowered.api.data.DataTransactionBuilder;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.manipulator.block.DirectionalData;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableDirectionalData;
+import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
 import org.spongepowered.api.service.persistence.InvalidDataException;
-import org.spongepowered.api.data.DataTransactionBuilder;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
+import org.spongepowered.common.data.manipulator.immutable.block.ImmutableSpongeDirectionalData;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeDirectionalData;
 import org.spongepowered.common.interfaces.block.IMixinBlockDirectional;
 
-public class DirectionalProcessor implements DataProcessor<DirectionalData>, SpongeBlockProcessor<DirectionalData> {
+public class DirectionalProcessor implements DataProcessor<DirectionalData, ImmutableDirectionalData>, BlockDataProcessor<DirectionalData> {
 
     @Override
-    public Optional<DirectionalData> fillData(DataHolder dataHolder, DirectionalData manipulator, DataPriority priority) {
+    public Optional<DirectionalData> fillData(DataHolder dataHolder, DirectionalData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DirectionalData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DirectionalData manipulator) {
         return DataTransactionBuilder.successNoData();
     }
 
@@ -71,6 +73,11 @@ public class DirectionalProcessor implements DataProcessor<DirectionalData>, Spo
     }
 
     @Override
+    public ImmutableDirectionalData createImmutable() {
+        return new ImmutableSpongeDirectionalData(Direction.NONE);
+    }
+
+    @Override
     public Optional<DirectionalData> createFrom(DataHolder dataHolder) {
         return Optional.absent();
     }
@@ -85,12 +92,12 @@ public class DirectionalProcessor implements DataProcessor<DirectionalData>, Spo
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, DirectionalData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, DirectionalData manipulator) {
         IBlockState blockState = world.getBlockState(blockPos);
         if (blockState.getBlock() instanceof IMixinBlockDirectional) {
-            return ((IMixinBlockDirectional) blockState.getBlock()).setDirectionalData(manipulator, world, blockPos, priority);
+            return ((IMixinBlockDirectional) blockState.getBlock()).setDirectionalData(manipulator, world, blockPos);
         }
-        return fail(manipulator);
+        return failResult(manipulator.direction().asImmutable());
     }
 
     @Override

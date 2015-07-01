@@ -47,12 +47,12 @@ public class ElderDataProcessor implements DataProcessor<ElderData> {
     }
 
     @Override
-    public Optional<ElderData> fillData(DataHolder dataHolder, ElderData manipulator, DataPriority priority) {
+    public Optional<ElderData> fillData(DataHolder dataHolder, ElderData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, ElderData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, ElderData manipulator) {
         return null;
     }
 

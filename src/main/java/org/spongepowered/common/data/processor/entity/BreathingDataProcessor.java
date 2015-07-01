@@ -54,7 +54,7 @@ public class BreathingDataProcessor implements DataProcessor<BreathingData> {
     }
 
     @Override
-    public Optional<BreathingData> fillData(DataHolder dataHolder, BreathingData manipulator, DataPriority priority) {
+    public Optional<BreathingData> fillData(DataHolder dataHolder, BreathingData manipulator) {
         if (!(dataHolder instanceof EntityLivingBase)) {
             return Optional.absent();
         }
@@ -69,7 +69,7 @@ public class BreathingDataProcessor implements DataProcessor<BreathingData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, BreathingData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, BreathingData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityLivingBase)) {
             return fail(manipulator);
         }

@@ -52,7 +52,7 @@ public class AgentDataProcessor implements DataProcessor<AgentData> {
     }
 
     @Override
-    public Optional<AgentData> fillData(DataHolder dataHolder, AgentData manipulator, DataPriority priority) {
+    public Optional<AgentData> fillData(DataHolder dataHolder, AgentData manipulator) {
         if (!(dataHolder instanceof EntityLiving)) {
             return Optional.absent();
         }
@@ -72,7 +72,7 @@ public class AgentDataProcessor implements DataProcessor<AgentData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, AgentData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, AgentData manipulator) {
         if (!(dataHolder instanceof EntityLiving)) {
             return fail(manipulator);
         }

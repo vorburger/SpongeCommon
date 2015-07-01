@@ -52,7 +52,7 @@ public class AngerableDataProcessor implements DataProcessor<AngerableData> {
     }
 
     @Override
-    public Optional<AngerableData> fillData(DataHolder dataHolder, AngerableData manipulator, DataPriority priority) {
+    public Optional<AngerableData> fillData(DataHolder dataHolder, AngerableData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof IMixinAnger)) {
             return Optional.absent();
         }
@@ -67,7 +67,7 @@ public class AngerableDataProcessor implements DataProcessor<AngerableData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, AngerableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, AngerableData manipulator) {
         if (!(dataHolder instanceof IMixinAnger)) {
             return fail(manipulator);
         }

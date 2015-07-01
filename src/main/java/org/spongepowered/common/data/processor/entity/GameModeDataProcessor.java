@@ -55,7 +55,7 @@ public class GameModeDataProcessor implements DataProcessor<GameModeData> {
     }
 
     @Override
-    public Optional<GameModeData> fillData(DataHolder dataHolder, GameModeData manipulator, DataPriority priority) {
+    public Optional<GameModeData> fillData(DataHolder dataHolder, GameModeData manipulator) {
         if (!(dataHolder instanceof EntityPlayerMP)) {
             return Optional.absent();
         }
@@ -70,7 +70,7 @@ public class GameModeDataProcessor implements DataProcessor<GameModeData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, GameModeData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, GameModeData manipulator) {
         if (!(dataHolder instanceof EntityPlayerMP)) {
             return fail(manipulator);
         }

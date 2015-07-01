@@ -63,7 +63,7 @@ public class AuthorProcessor implements DataProcessor<AuthorData> {
     }
 
     @Override
-    public Optional<AuthorData> fillData(DataHolder dataHolder, AuthorData manipulator, DataPriority priority) {
+    public Optional<AuthorData> fillData(DataHolder dataHolder, AuthorData manipulator) {
         if (dataHolder instanceof org.spongepowered.api.item.inventory.ItemStack) {
             if (((ItemStack) dataHolder).getItem() != Items.written_book) {
                 return Optional.absent();
@@ -81,7 +81,7 @@ public class AuthorProcessor implements DataProcessor<AuthorData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, AuthorData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, AuthorData manipulator) {
         if (dataHolder instanceof ItemStack && ((ItemStack) dataHolder).getItem() == Items.written_book) {
             ((ItemStack) dataHolder).setTagInfo("author", new NBTTagString(Texts.toPlain(manipulator.getValue())));
             return successNoData();

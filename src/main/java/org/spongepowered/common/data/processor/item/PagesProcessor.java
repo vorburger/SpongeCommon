@@ -59,7 +59,7 @@ public class PagesProcessor implements DataProcessor<PagedData> {
 
 
     @Override
-    public Optional<PagedData> fillData(DataHolder dataHolder, PagedData manipulator, DataPriority priority) {
+    public Optional<PagedData> fillData(DataHolder dataHolder, PagedData manipulator) {
         if (dataHolder instanceof ItemStack) {
             if (((ItemStack) dataHolder).getItem() != Items.writable_book || ((ItemStack) dataHolder).getItem() != Items.written_book) {
                 return Optional.absent();
@@ -93,7 +93,7 @@ public class PagesProcessor implements DataProcessor<PagedData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, PagedData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, PagedData manipulator) {
         if (dataHolder instanceof ItemStack && (((ItemStack) dataHolder).getItem() == Items.writable_book
                 || ((ItemStack) dataHolder).getItem() == Items.written_book)) {
             final NBTTagList loreList = new NBTTagList();

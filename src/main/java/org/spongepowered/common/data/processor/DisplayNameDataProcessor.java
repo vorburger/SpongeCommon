@@ -115,13 +115,13 @@ public class DisplayNameDataProcessor implements DataProcessor<DisplayNameData> 
     }
 
     @Override
-    public Optional<DisplayNameData> fillData(DataHolder dataHolder, DisplayNameData manipulator, DataPriority priority) {
+    public Optional<DisplayNameData> fillData(DataHolder dataHolder, DisplayNameData manipulator) {
         return Optional.absent(); // todo
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DisplayNameData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DisplayNameData manipulator) {
         if (dataHolder instanceof ItemStack) {
             switch (checkNotNull(priority)) {
                 case DATA_MANIPULATOR:

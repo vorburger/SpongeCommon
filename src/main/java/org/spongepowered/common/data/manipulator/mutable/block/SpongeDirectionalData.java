@@ -29,30 +29,50 @@ import static org.spongepowered.api.data.DataQuery.of;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.MemoryDataContainer;
-import org.spongepowered.api.data.manipulator.block.DirectionalData;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.immutable.block.ImmutableDirectionalData;
+import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
+import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.common.data.manipulator.MutableSingleValueData;
+import org.spongepowered.common.data.manipulator.AbstractMutableData;
+import org.spongepowered.common.data.value.mutable.SpongeValue;
 
-public class SpongeDirectionalData extends MutableSingleValueData<Direction, DirectionalData> implements DirectionalData {
+public class SpongeDirectionalData extends AbstractMutableData<DirectionalData, ImmutableDirectionalData> implements DirectionalData {
 
     public static final DataQuery DIRECTION = of("Direction");
 
+    private Direction direction = Direction.NONE;
+
     public SpongeDirectionalData() {
-        super(DirectionalData.class, Direction.NONE);
+        super(DirectionalData.class);
     }
 
     @Override
     public DirectionalData copy() {
-        return new SpongeDirectionalData().setValue(this.getValue());
+        return new SpongeDirectionalData().setDirection(getDirection());
     }
 
     @Override
     public int compareTo(DirectionalData o) {
-        return o.getValue().ordinal() - this.getValue().ordinal();
+        return o.direction().get().compareTo(this.direction);
     }
 
     @Override
     public DataContainer toContainer() {
-        return new MemoryDataContainer().set(DIRECTION, this.getValue().name());
+        return new MemoryDataContainer().set(DIRECTION, this.direction.name());
+    }
+
+    @Override
+    public Value<Direction> direction() {
+        return new SpongeValue<Direction>(Keys.DIRECTION, Direction.NONE, this.direction);
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public SpongeDirectionalData setDirection(Direction direction) {
+        this.direction = direction;
+        return this;
     }
 }

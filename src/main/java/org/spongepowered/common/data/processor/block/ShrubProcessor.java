@@ -50,13 +50,13 @@ import org.spongepowered.api.data.manipulator.block.ShrubData;
 import org.spongepowered.api.data.type.ShrubType;
 import org.spongepowered.api.service.persistence.InvalidDataException;
 import org.spongepowered.common.Sponge;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeShrubData;
 
 import java.util.List;
 
-public class ShrubProcessor implements SpongeBlockProcessor<ShrubData>, DataProcessor<ShrubData> {
+public class ShrubProcessor implements BlockDataProcessor<ShrubData>, DataProcessor<ShrubData> {
 
     @Override
     public Optional<ShrubData> getFrom(DataHolder dataHolder) {
@@ -64,7 +64,7 @@ public class ShrubProcessor implements SpongeBlockProcessor<ShrubData>, DataProc
     }
 
     @Override
-    public Optional<ShrubData> fillData(DataHolder dataHolder, ShrubData manipulator, DataPriority priority) {
+    public Optional<ShrubData> fillData(DataHolder dataHolder, ShrubData manipulator) {
         if (!(dataHolder instanceof ItemStack) || !(((ItemStack) dataHolder).getItem() instanceof ItemBlock)) {
             return Optional.absent();
         }
@@ -90,7 +90,7 @@ public class ShrubProcessor implements SpongeBlockProcessor<ShrubData>, DataProc
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, ShrubData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, ShrubData manipulator) {
         if (!(dataHolder instanceof ItemStack) || !(((ItemStack) dataHolder).getItem() instanceof ItemBlock)) {
             return fail(manipulator);
         }
@@ -170,7 +170,7 @@ public class ShrubProcessor implements SpongeBlockProcessor<ShrubData>, DataProc
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, ShrubData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, ShrubData manipulator) {
         final IBlockState blockState = checkNotNull(world).getBlockState(checkNotNull(blockPos));
         if (blockState.getBlock() != Blocks.tallgrass) {
             return fail(manipulator);

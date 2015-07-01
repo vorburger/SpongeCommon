@@ -47,12 +47,12 @@ public class BannerDataProcessor implements DataProcessor<BannerData> {
     }
 
     @Override
-    public Optional<BannerData> fillData(DataHolder dataHolder, BannerData manipulator, DataPriority priority) {
+    public Optional<BannerData> fillData(DataHolder dataHolder, BannerData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, BannerData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, BannerData manipulator) {
         return null;
     }
 

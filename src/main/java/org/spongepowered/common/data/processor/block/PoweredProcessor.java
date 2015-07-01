@@ -38,20 +38,20 @@ import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.block.PoweredData;
 import org.spongepowered.api.service.persistence.InvalidDataException;
 import org.spongepowered.api.data.DataTransactionBuilder;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongePoweredData;
 import org.spongepowered.common.interfaces.block.IMixinPoweredHolder;
 
-public class PoweredProcessor implements DataProcessor<PoweredData>, SpongeBlockProcessor<PoweredData> {
+public class PoweredProcessor implements DataProcessor<PoweredData>, BlockDataProcessor<PoweredData> {
 
     @Override
-    public Optional<PoweredData> fillData(DataHolder dataHolder, PoweredData manipulator, DataPriority priority) {
+    public Optional<PoweredData> fillData(DataHolder dataHolder, PoweredData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, PoweredData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, PoweredData manipulator) {
         return fail(manipulator);
     }
 
@@ -85,7 +85,7 @@ public class PoweredProcessor implements DataProcessor<PoweredData>, SpongeBlock
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, PoweredData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, PoweredData manipulator) {
         IBlockState blockState = world.getBlockState(blockPos);
         if(blockState.getBlock() instanceof IMixinPoweredHolder) {
             return ((IMixinPoweredHolder) blockState.getBlock()).setPoweredData(manipulator, world, blockPos, priority);

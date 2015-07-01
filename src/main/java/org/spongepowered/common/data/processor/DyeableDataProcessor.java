@@ -46,13 +46,13 @@ import org.spongepowered.api.data.manipulator.DyeableData;
 import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.service.persistence.InvalidDataException;
 import org.spongepowered.common.Sponge;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.SpongeDyeableData;
 import org.spongepowered.common.interfaces.block.IMixinBlockDyeable;
 import org.spongepowered.common.interfaces.item.IMixinItemDyeable;
 
-public class DyeableDataProcessor implements DataProcessor<DyeableData>, SpongeBlockProcessor<DyeableData> {
+public class DyeableDataProcessor implements DataProcessor<DyeableData>, BlockDataProcessor<DyeableData> {
 
     @Override
     public Optional<DyeableData> getFrom(DataHolder dataHolder) {
@@ -69,7 +69,7 @@ public class DyeableDataProcessor implements DataProcessor<DyeableData>, SpongeB
     }
 
     @Override
-    public Optional<DyeableData> fillData(DataHolder dataHolder, DyeableData manipulator, DataPriority priority) {
+    public Optional<DyeableData> fillData(DataHolder dataHolder, DyeableData manipulator) {
         if (dataHolder instanceof EntitySheep) {
             switch (checkNotNull(priority)) {
                 case DATA_HOLDER:
@@ -95,7 +95,7 @@ public class DyeableDataProcessor implements DataProcessor<DyeableData>, SpongeB
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DyeableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DyeableData manipulator) {
         if (dataHolder instanceof EntitySheep) {
             switch (checkNotNull(priority)) {
                 case DATA_MANIPULATOR:
@@ -164,7 +164,7 @@ public class DyeableDataProcessor implements DataProcessor<DyeableData>, SpongeB
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, DyeableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, DyeableData manipulator) {
         final IBlockState blockState = checkNotNull(world).getBlockState(checkNotNull(blockPos));
         if (!(blockState.getBlock() instanceof IMixinBlockDyeable)) {
             return fail(manipulator);

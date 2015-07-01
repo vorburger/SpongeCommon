@@ -43,7 +43,7 @@ import org.spongepowered.common.data.manipulator.mutable.entity.SpongeFoodData;
 public class FoodDataProcessor implements DataProcessor<FoodData> {
 
     @Override
-    public Optional<FoodData> fillData(DataHolder dataHolder, FoodData manipulator, DataPriority priority) {
+    public Optional<FoodData> fillData(DataHolder dataHolder, FoodData manipulator) {
         if (!(dataHolder instanceof EntityPlayer)) {
             return Optional.absent();
         }
@@ -61,7 +61,7 @@ public class FoodDataProcessor implements DataProcessor<FoodData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, FoodData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, FoodData manipulator) {
         if (!(dataHolder instanceof EntityPlayer)) {
             return fail(manipulator);
         } else {

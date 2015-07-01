@@ -51,7 +51,7 @@ public class BreedableDataProcessor implements DataProcessor<BreedableData> {
     }
 
     @Override
-    public Optional<BreedableData> fillData(DataHolder dataHolder, BreedableData manipulator, DataPriority priority) {
+    public Optional<BreedableData> fillData(DataHolder dataHolder, BreedableData manipulator) {
         if (!(dataHolder instanceof EntityAnimal)) {
             return Optional.absent();
         }
@@ -59,7 +59,7 @@ public class BreedableDataProcessor implements DataProcessor<BreedableData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, BreedableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, BreedableData manipulator) {
         if (!(dataHolder instanceof EntityAnimal)) {
             return fail(manipulator);
         }

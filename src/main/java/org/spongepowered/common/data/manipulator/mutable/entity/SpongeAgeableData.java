@@ -29,10 +29,15 @@ import static org.spongepowered.api.data.DataQuery.of;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.MemoryDataContainer;
-import org.spongepowered.api.data.manipulator.entity.AgeableData;
-import org.spongepowered.common.data.manipulator.MutableIntData;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableAgeableData;
+import org.spongepowered.api.data.manipulator.mutable.entity.AgeableData;
+import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
+import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.common.data.manipulator.AbstractMutableData;
+import org.spongepowered.common.data.value.mutable.SpongeBoundedValue;
 
-public class SpongeAgeableData extends MutableIntData<AgeableData> implements AgeableData {
+public class SpongeAgeableData extends AbstractMutableData<AgeableData, ImmutableAgeableData> implements AgeableData {
 
     public static final DataQuery AGE = of("Age");
 
@@ -40,27 +45,22 @@ public class SpongeAgeableData extends MutableIntData<AgeableData> implements Ag
         super(AgeableData.class, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
-    @Override
     public int getAge() {
         return getValue();
     }
 
-    @Override
-    public AgeableData setAge(int age) {
+    public SpongeAgeableData setAge(int age) {
         return setValue(age);
     }
 
-    @Override
-    public AgeableData setBaby() {
+    public SpongeAgeableData setBaby() {
         return setAge(Integer.MIN_VALUE);
     }
 
-    @Override
-    public AgeableData setAdult() {
+    public SpongeAgeableData setAdult() {
         return setAge(0);
     }
 
-    @Override
     public boolean isBaby() {
         return getAge() < 0;
     }
@@ -73,5 +73,25 @@ public class SpongeAgeableData extends MutableIntData<AgeableData> implements Ag
     @Override
     public DataContainer toContainer() {
         return new MemoryDataContainer().set(AGE, this.getValue());
+    }
+
+    @Override
+    public MutableBoundedValue<Integer> age() {
+        return new SpongeBoundedValue<Integer>(Keys.AGE);
+    }
+
+    @Override
+    public Value<Boolean> baby() {
+        return null;
+    }
+
+    @Override
+    public Value<Boolean> adult() {
+        return null;
+    }
+
+    @Override
+    public int compareTo(AgeableData o) {
+        return 0;
     }
 }

@@ -54,7 +54,7 @@ public class ArtDataProcessor implements DataProcessor<ArtData> {
     }
 
     @Override
-    public Optional<ArtData> fillData(DataHolder dataHolder, ArtData manipulator, DataPriority priority) {
+    public Optional<ArtData> fillData(DataHolder dataHolder, ArtData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityPainting)) {
             return Optional.absent();
         }
@@ -68,7 +68,7 @@ public class ArtDataProcessor implements DataProcessor<ArtData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, ArtData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, ArtData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityPainting)) {
             return fail(manipulator);
         }

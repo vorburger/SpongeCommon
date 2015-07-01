@@ -39,12 +39,12 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.WetData;
 import org.spongepowered.api.service.persistence.InvalidDataException;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.SpongeWetData;
 import org.spongepowered.common.interfaces.entity.IMixinWetHolder;
 
-public class WetDataProcessor implements DataProcessor<WetData>, SpongeBlockProcessor<WetData> {
+public class WetDataProcessor implements DataProcessor<WetData>, BlockDataProcessor<WetData> {
 
     @Override
     public Optional<WetData> getFrom(DataHolder dataHolder) {
@@ -55,12 +55,12 @@ public class WetDataProcessor implements DataProcessor<WetData>, SpongeBlockProc
     }
 
     @Override
-    public Optional<WetData> fillData(DataHolder dataHolder, WetData manipulator, DataPriority priority) {
+    public Optional<WetData> fillData(DataHolder dataHolder, WetData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, WetData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, WetData manipulator) {
         return fail(manipulator);
     }
 
@@ -97,7 +97,7 @@ public class WetDataProcessor implements DataProcessor<WetData>, SpongeBlockProc
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, WetData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, WetData manipulator) {
 
         return fail(manipulator);
     }

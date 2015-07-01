@@ -32,7 +32,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.DataTransactionResult;
 
-public interface SpongeBlockProcessor<T extends DataManipulator<T, ?>> {
+public interface BlockDataProcessor<T extends DataManipulator<T, ?>> {
 
     Optional<T> fromBlockPos(World world, BlockPos blockPos);
 

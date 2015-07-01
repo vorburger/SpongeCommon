@@ -61,12 +61,12 @@ public class ColoredDataProcessor implements DataProcessor<ColoredData> {
     }
 
     @Override
-    public Optional<ColoredData> fillData(DataHolder dataHolder, ColoredData manipulator, DataPriority priority) {
+    public Optional<ColoredData> fillData(DataHolder dataHolder, ColoredData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, ColoredData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, ColoredData manipulator) {
         return null;
     }
 

@@ -73,12 +73,12 @@ public class DurabilityDataProcessor implements DataProcessor<DurabilityData> {
     }
 
     @Override
-    public Optional<DurabilityData> fillData(DataHolder dataHolder, DurabilityData manipulator, DataPriority priority) {
+    public Optional<DurabilityData> fillData(DataHolder dataHolder, DurabilityData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DurabilityData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DurabilityData manipulator) {
         if (dataHolder instanceof ItemStack && (((ItemStack) dataHolder).getItem() instanceof ItemArmor || ((ItemStack) dataHolder).getItem()
                 instanceof ItemSword|| ((ItemStack) dataHolder).getItem() instanceof ItemTool)) {
             final DurabilityData oldData = createFrom(dataHolder).get();

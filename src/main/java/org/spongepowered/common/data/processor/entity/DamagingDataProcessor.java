@@ -42,12 +42,12 @@ public class DamagingDataProcessor implements DataProcessor<DamagingData> {
     }
 
     @Override
-    public Optional<DamagingData> fillData(DataHolder dataHolder, DamagingData manipulator, DataPriority priority) {
+    public Optional<DamagingData> fillData(DataHolder dataHolder, DamagingData manipulator) {
         return null;
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DamagingData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DamagingData manipulator) {
         return null;
     }
 

@@ -41,7 +41,7 @@ public class SpongeManipulatorRegistry implements DataManipulatorRegistry {
 
     private final Map<Class<? extends DataManipulator<?>>, DataManipulatorBuilder<?>> builderMap = new MapMaker().concurrencyLevel(4).makeMap();
     private final Map<Class<? extends DataManipulator<?>>, DataProcessor<?>> dataProcessorMap = new MapMaker().concurrencyLevel(4).makeMap();
-    private final Map<Class<? extends DataManipulator<?>>, SpongeBlockProcessor<?>> blockProcessorMap = new MapMaker().concurrencyLevel(4).makeMap();
+    private final Map<Class<? extends DataManipulator<?>>, BlockDataProcessor<?>> blockProcessorMap = new MapMaker().concurrencyLevel(4).makeMap();
 
     private SpongeManipulatorRegistry() {
     }
@@ -86,7 +86,7 @@ public class SpongeManipulatorRegistry implements DataManipulatorRegistry {
         return Optional.fromNullable((DataProcessor<T>) (Object) this.dataProcessorMap.get(checkNotNull(manipulatorClass)));
     }
 
-    public <T extends DataManipulator<T>> void registerBlockProcessor(Class<T> manipulatorclass, SpongeBlockProcessor<T> util) {
+    public <T extends DataManipulator<T>> void registerBlockProcessor(Class<T> manipulatorclass, BlockDataProcessor<T> util) {
         if (!this.blockProcessorMap.containsKey(checkNotNull(manipulatorclass))) {
             this.blockProcessorMap.put(manipulatorclass, checkNotNull(util));
         } else {
@@ -96,7 +96,7 @@ public class SpongeManipulatorRegistry implements DataManipulatorRegistry {
     }
 
     public <T extends DataManipulator<T>> void registerBlockProcessorAndImpl(Class<T> manipulatorClass, Class<? extends T> implClass,
-            SpongeBlockProcessor<T> processor) {
+            BlockDataProcessor<T> processor) {
         checkState(!this.blockProcessorMap.containsKey(checkNotNull(manipulatorClass)), "Already registered a DataProcessor for the given "
                 + "DataManipulator: " + manipulatorClass.getCanonicalName());
         checkState(!this.blockProcessorMap.containsKey(checkNotNull(implClass)), "Already registered a DataProcessor for the given "
@@ -106,7 +106,7 @@ public class SpongeManipulatorRegistry implements DataManipulatorRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends DataManipulator<T>> Optional<SpongeBlockProcessor<T>> getBlockUtil(Class<T> manipulatorClass) {
-        return Optional.fromNullable((SpongeBlockProcessor<T>) (Object) this.blockProcessorMap.get(checkNotNull(manipulatorClass)));
+    public <T extends DataManipulator<T>> Optional<BlockDataProcessor<T>> getBlockUtil(Class<T> manipulatorClass) {
+        return Optional.fromNullable((BlockDataProcessor<T>) (Object) this.blockProcessorMap.get(checkNotNull(manipulatorClass)));
     }
 }

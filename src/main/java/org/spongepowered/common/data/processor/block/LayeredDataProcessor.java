@@ -39,12 +39,12 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.block.LayeredData;
 import org.spongepowered.api.service.persistence.InvalidDataException;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeLayeredData;
 import org.spongepowered.common.interfaces.block.IMixinBlockLayerable;
 
-public class LayeredDataProcessor implements DataProcessor<LayeredData>, SpongeBlockProcessor<LayeredData> {
+public class LayeredDataProcessor implements DataProcessor<LayeredData>, BlockDataProcessor<LayeredData> {
 
     @Override
     public Optional<LayeredData> getFrom(DataHolder dataHolder) {
@@ -52,12 +52,12 @@ public class LayeredDataProcessor implements DataProcessor<LayeredData>, SpongeB
     }
 
     @Override
-    public Optional<LayeredData> fillData(DataHolder dataHolder, LayeredData manipulator, DataPriority priority) {
+    public Optional<LayeredData> fillData(DataHolder dataHolder, LayeredData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, LayeredData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, LayeredData manipulator) {
         return fail(manipulator);
     }
 
@@ -93,7 +93,7 @@ public class LayeredDataProcessor implements DataProcessor<LayeredData>, SpongeB
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, LayeredData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, LayeredData manipulator) {
         final IBlockState blockState = checkNotNull(world).getBlockState(checkNotNull(blockPos));
         if (blockState.getBlock() instanceof IMixinBlockLayerable) {
             return ((IMixinBlockLayerable) blockState.getBlock()).setLayerData(checkNotNull(manipulator), world, blockPos, checkNotNull(priority));

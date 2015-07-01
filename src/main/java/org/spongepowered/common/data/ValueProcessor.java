@@ -73,7 +73,10 @@ public interface ValueProcessor<E, V extends BaseValue<E>> {
 
     /**
      * Gets the actual {@link Value} object wrapping around the underlying value
-     * desired from the provided {@link ValueContainer}.
+     * desired from the provided {@link ValueContainer}. This is very similar to
+     * {@link #getValueFromContainer(ValueContainer)} except that instead of an
+     * actual value, a {@link Value} or extension there of is returned.
+     *
      * @param container
      * @return
      */
@@ -81,9 +84,9 @@ public interface ValueProcessor<E, V extends BaseValue<E>> {
 
     boolean supports(ValueContainer<?> valueContainer);
 
-    DataTransactionResult offerToStore(CompositeValueStore<?, ?> store, E value);
-
     DataTransactionResult offerToStore(BaseValue<E> value);
+
+    DataTransactionResult offerToStore(CompositeValueStore<?, ?> store, E value);
 
 
 

@@ -53,7 +53,7 @@ public class LoreProcessor implements DataProcessor<LoreData> {
 
     @SuppressWarnings("deprecation")
     @Override
-    public Optional<LoreData> fillData(DataHolder dataHolder, LoreData manipulator, DataPriority priority) {
+    public Optional<LoreData> fillData(DataHolder dataHolder, LoreData manipulator) {
         checkNotNull(dataHolder);
         checkNotNull(manipulator);
         if (dataHolder instanceof ItemStack) {
@@ -116,7 +116,7 @@ public class LoreProcessor implements DataProcessor<LoreData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, LoreData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, LoreData manipulator) {
         if (dataHolder instanceof ItemStack) {
             final NBTTagList loreList = new NBTTagList();
             for (Text text : manipulator.getAll()) {

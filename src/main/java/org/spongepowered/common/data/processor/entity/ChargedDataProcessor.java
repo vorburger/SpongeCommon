@@ -51,7 +51,7 @@ public class ChargedDataProcessor implements DataProcessor<ChargedData> {
     }
 
     @Override
-    public Optional<ChargedData> fillData(DataHolder dataHolder, ChargedData manipulator, DataPriority priority) {
+    public Optional<ChargedData> fillData(DataHolder dataHolder, ChargedData manipulator) {
         if (!(dataHolder instanceof EntityCreeper)) {
             return Optional.absent();
         }
@@ -59,7 +59,7 @@ public class ChargedDataProcessor implements DataProcessor<ChargedData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, ChargedData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, ChargedData manipulator) {
         if (!(dataHolder instanceof EntityCreeper)) {
             return fail(manipulator);
         }

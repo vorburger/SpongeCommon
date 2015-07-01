@@ -40,12 +40,12 @@ import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.block.TreeData;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.service.persistence.InvalidDataException;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeTreeData;
 import org.spongepowered.common.interfaces.block.IMixinBlockTree;
 
-public class TreeDataProcessor implements DataProcessor<TreeData>, SpongeBlockProcessor<TreeData>  {
+public class TreeDataProcessor implements DataProcessor<TreeData>, BlockDataProcessor<TreeData> {
 
     @Override
     public Optional<TreeData> getFrom(DataHolder dataHolder) {
@@ -53,12 +53,12 @@ public class TreeDataProcessor implements DataProcessor<TreeData>, SpongeBlockPr
     }
 
     @Override
-    public Optional<TreeData> fillData(DataHolder dataHolder, TreeData manipulator, DataPriority priority) {
+    public Optional<TreeData> fillData(DataHolder dataHolder, TreeData manipulator) {
         return Optional.absent();
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, TreeData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, TreeData manipulator) {
         return fail(manipulator);
     }
 
@@ -93,7 +93,7 @@ public class TreeDataProcessor implements DataProcessor<TreeData>, SpongeBlockPr
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, TreeData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, TreeData manipulator) {
         final IBlockState blockState = checkNotNull(world).getBlockState(checkNotNull(blockPos));
         if (blockState.getBlock() instanceof IMixinBlockTree) {
             return ((IMixinBlockTree) blockState.getBlock()).setTreeData(checkNotNull(manipulator), world, blockPos, checkNotNull(priority));

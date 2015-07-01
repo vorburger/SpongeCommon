@@ -47,16 +47,17 @@ import org.spongepowered.api.data.DataPriority;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.block.DoublePlantData;
+import org.spongepowered.api.data.manipulator.mutable.block.DoublePlantData;
 import org.spongepowered.api.data.type.DoubleSizePlantType;
 import org.spongepowered.api.service.persistence.InvalidDataException;
 import org.spongepowered.common.Sponge;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.DataProcessor;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeDoublePlantData;
 
 import java.util.List;
 
-public class DoublePlantProcessor implements SpongeBlockProcessor<DoublePlantData>, DataProcessor<DoublePlantData> {
+public class DoublePlantProcessor implements BlockDataProcessor<DoublePlantData>, DataProcessor<DoublePlantData> {
 
     @Override
     public Optional<DoublePlantData> getFrom(DataHolder dataHolder) {
@@ -69,7 +70,7 @@ public class DoublePlantProcessor implements SpongeBlockProcessor<DoublePlantDat
     }
 
     @Override
-    public Optional<DoublePlantData> fillData(DataHolder dataHolder, DoublePlantData manipulator, DataPriority priority) {
+    public Optional<DoublePlantData> fillData(DataHolder dataHolder, DoublePlantData manipulator) {
         if (!(dataHolder instanceof ItemStack) || !(((ItemStack) dataHolder).getItem() instanceof ItemDoublePlant)) {
             return Optional.absent();
         }
@@ -95,7 +96,7 @@ public class DoublePlantProcessor implements SpongeBlockProcessor<DoublePlantDat
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DoublePlantData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DoublePlantData manipulator) {
         if (!(dataHolder instanceof ItemStack) || !(((ItemStack) dataHolder).getItem() instanceof ItemBlock)) {
             return fail(manipulator);
         }
@@ -172,7 +173,7 @@ public class DoublePlantProcessor implements SpongeBlockProcessor<DoublePlantDat
     }
 
     @Override
-    public DataTransactionResult setData(World world, BlockPos blockPos, DoublePlantData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(World world, BlockPos blockPos, DoublePlantData manipulator) {
         final IBlockState blockState = checkNotNull(world).getBlockState(checkNotNull(blockPos));
         if (blockState.getBlock() != Blocks.double_plant) {
             return fail(manipulator);

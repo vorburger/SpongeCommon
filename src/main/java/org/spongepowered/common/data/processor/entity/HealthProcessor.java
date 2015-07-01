@@ -48,7 +48,7 @@ public class HealthProcessor implements DataProcessor<HealthData> {
     private static final DataQuery MAX_HEALTH_QUERY = of("MaxHealth");
 
     @Override
-    public Optional<HealthData> fillData(DataHolder dataHolder, HealthData manipulator, DataPriority priority) {
+    public Optional<HealthData> fillData(DataHolder dataHolder, HealthData manipulator) {
         // todo for now, we only focus on health to and from entities.
         if (!(dataHolder instanceof EntityLivingBase)) {
             return Optional.absent();
@@ -65,7 +65,7 @@ public class HealthProcessor implements DataProcessor<HealthData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, HealthData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, HealthData manipulator) {
         if (!(dataHolder instanceof EntityLivingBase)) {
             return fail(manipulator);
         }

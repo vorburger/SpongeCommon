@@ -47,7 +47,7 @@ import org.spongepowered.common.interfaces.entity.IMixinVillager;
 public class CareerDataProcessor implements DataProcessor<CareerData> {
 
     @Override
-    public Optional<CareerData> fillData(DataHolder dataHolder, CareerData manipulator, DataPriority priority) {
+    public Optional<CareerData> fillData(DataHolder dataHolder, CareerData manipulator) {
         if (!(dataHolder instanceof IMixinVillager)) {
             return Optional.absent();
         } else {
@@ -63,7 +63,7 @@ public class CareerDataProcessor implements DataProcessor<CareerData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, CareerData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, CareerData manipulator) {
         if (dataHolder instanceof EntityVillager) {
             switch (checkNotNull(priority)) {
                 case DATA_MANIPULATOR:

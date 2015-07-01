@@ -54,7 +54,7 @@ public class AgeableDataProcessor implements DataProcessor<AgeableData> {
     }
 
     @Override
-    public Optional<AgeableData> fillData(DataHolder dataHolder, AgeableData manipulator, DataPriority priority) {
+    public Optional<AgeableData> fillData(DataHolder dataHolder, AgeableData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityAgeable)) {
             return Optional.of(manipulator);
         }
@@ -71,7 +71,7 @@ public class AgeableDataProcessor implements DataProcessor<AgeableData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, AgeableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, AgeableData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityAgeable)) {
             return fail(manipulator);
         }

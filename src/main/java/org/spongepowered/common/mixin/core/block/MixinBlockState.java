@@ -41,7 +41,7 @@ import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.Sponge;
-import org.spongepowered.common.data.SpongeBlockProcessor;
+import org.spongepowered.common.data.BlockDataProcessor;
 import org.spongepowered.common.data.SpongeManipulatorRegistry;
 import org.spongepowered.common.interfaces.block.IMixinBlock;
 
@@ -82,7 +82,7 @@ public abstract class MixinBlockState extends BlockStateBase implements BlockSta
     @SuppressWarnings("unchecked")
     @Override
     public <M extends DataManipulator<M>> Optional<BlockState> withData(M manipulator) {
-        SpongeBlockProcessor<M> processor = ((SpongeManipulatorRegistry) Sponge.getSpongeRegistry().getManipulatorRegistry()).getBlockUtil((Class<M>) (Class) manipulator.getClass()).get();
+        BlockDataProcessor<M> processor = ((SpongeManipulatorRegistry) Sponge.getSpongeRegistry().getManipulatorRegistry()).getBlockUtil((Class<M>) (Class) manipulator.getClass()).get();
         return processor.withData(this, manipulator);
     }
 

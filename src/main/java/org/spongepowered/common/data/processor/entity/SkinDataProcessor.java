@@ -76,7 +76,7 @@ public class SkinDataProcessor implements DataProcessor<SkinData> {
     }
 
     @Override
-    public Optional<SkinData> fillData(DataHolder holder, SkinData manipulator, DataPriority priority) {
+    public Optional<SkinData> fillData(DataHolder holder, SkinData manipulator) {
         if (!(holder instanceof EntityHuman)) {
             return Optional.absent();
         }
@@ -90,7 +90,7 @@ public class SkinDataProcessor implements DataProcessor<SkinData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, SkinData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, SkinData manipulator) {
         if (dataHolder instanceof EntityHuman) {
             switch (checkNotNull(priority)) {
                 case DATA_MANIPULATOR:

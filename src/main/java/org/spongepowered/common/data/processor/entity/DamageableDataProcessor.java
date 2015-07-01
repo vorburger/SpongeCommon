@@ -66,7 +66,7 @@ public class DamageableDataProcessor implements DataProcessor<DamageableData> {
     }
 
     @Override
-    public Optional<DamageableData> fillData(DataHolder dataHolder, DamageableData manipulator, DataPriority priority) {
+    public Optional<DamageableData> fillData(DataHolder dataHolder, DamageableData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityLivingBase)) {
             return Optional.absent();
         }
@@ -89,7 +89,7 @@ public class DamageableDataProcessor implements DataProcessor<DamageableData> {
     }
 
     @Override
-    public DataTransactionResult setData(DataHolder dataHolder, DamageableData manipulator, DataPriority priority) {
+    public DataTransactionResult setData(DataHolder dataHolder, DamageableData manipulator) {
         if (!(checkNotNull(dataHolder) instanceof EntityLivingBase)) {
             return fail(manipulator);
         }
