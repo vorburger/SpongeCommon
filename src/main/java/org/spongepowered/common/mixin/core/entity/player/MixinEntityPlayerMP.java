@@ -46,14 +46,15 @@ import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.LocaleUtils;
 import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.data.manipulator.entity.GameModeData;
 import org.spongepowered.api.data.manipulator.entity.JoinData;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.player.User;
 import org.spongepowered.api.network.PlayerConnection;
-import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatType;
@@ -81,12 +82,14 @@ import org.spongepowered.common.interfaces.IMixinServerScoreboard;
 import org.spongepowered.common.interfaces.IMixinSubject;
 import org.spongepowered.common.interfaces.text.IMixinTitle;
 import org.spongepowered.common.scoreboard.SpongeScoreboard;
+import org.spongepowered.common.service.user.SpongeUserStorage;
 import org.spongepowered.common.text.SpongeTexts;
 import org.spongepowered.common.text.chat.SpongeChatType;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 @NonnullByDefault
 @Mixin(EntityPlayerMP.class)
@@ -96,6 +99,8 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
     public int newLevel = 0;
     public int newTotalExperience = 0;
     public boolean keepsLevel = false;
+
+    private final User user = SpongeUserStorage.create(getGameProfile());
 
     @Shadow private String translator;
     @Shadow public NetHandlerPlayServer playerNetServerHandler;
@@ -124,22 +129,22 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
 
     @Override
     public GameProfile getProfile() {
-        return (GameProfile) getGameProfile();
+        return this.user.getProfile();
     }
 
     @Override
     public String getName() {
-        return getGameProfile().getName();
+        return this.user.getName();
     }
 
     @Override
     public boolean isOnline() {
-        return this.mcServer.getConfigurationManager().getPlayerByUUID(this.getUniqueId()) != null;
+        return this.user.isOnline();
     }
 
     @Override
     public Optional<Player> getPlayer() {
-        return this.isOnline() ? Optional.<Player>of(this) : Optional.<Player>absent();
+        return this.user.getPlayer();
     }
 
     @Override
@@ -254,7 +259,7 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
 
     @Override
     public String getSubjectCollectionIdentifier() {
-        return PermissionService.SUBJECTS_USER;
+        return ((IMixinSubject) this.user).getSubjectCollectionIdentifier();
     }
 
     @Override
@@ -281,12 +286,12 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
 
     @Override
     public String getIdentifier() {
-        return getUniqueID().toString();
+        return this.user.getIdentifier();
     }
 
     @Override
     public Tristate permDefault(String permission) {
-        return Tristate.FALSE;
+        return ((IMixinSubject) this.user).permDefault(permission);
     }
 
     @Override
@@ -342,7 +347,12 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
 
     @Override
     public DataContainer toContainer() {
-        return super.toContainer().set(of("JoinData"), getJoinData());
+        DataContainer container = super.toContainer();
+        DataContainer userData = this.user.toContainer();
+        for (Entry<DataQuery, Object> entry : userData.getValues(true).entrySet()) {
+            container.set(entry.getKey(), entry.getValue());
+        }
+        return container.set(of("JoinData"), getJoinData());
     }
 
     @Override
