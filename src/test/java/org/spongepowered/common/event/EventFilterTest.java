@@ -38,7 +38,6 @@ import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.biome.BiomeTypes;
@@ -59,13 +58,27 @@ import org.spongepowered.common.event.listener.NamedCauseListener;
 import org.spongepowered.common.event.listener.RootListener;
 import org.spongepowered.common.event.listener.SimpleListener;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import java.util.Optional;
 
 public class EventFilterTest {
 
-    private final DefineableClassLoader classLoader = new DefineableClassLoader(getClass().getClassLoader());
+	private final LoadingCache<Class<?>, DefineableClassLoader> clCache = CacheBuilder.newBuilder()
+            .concurrencyLevel(1)
+            .weakKeys()   // !!
+            .weakValues()
+            .build(new CacheLoader<Class<?>, DefineableClassLoader>() {
+
+				@Override
+				public DefineableClassLoader load(Class<?> key) throws Exception {
+					return new DefineableClassLoader(key.getClassLoader());
+				}
+            });
     private final AnnotatedEventListener.Factory handlerFactory = new ClassEventListenerFactory("org.spongepowered.common.event.listener",
-            new FilterFactory("org.spongepowered.common.event.filters", this.classLoader), this.classLoader);
+            new FilterFactory("org.spongepowered.common.event.filters", clCache), clCache);
 
     @Test
     public void testSimpleEvent() throws Exception {

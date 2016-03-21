@@ -39,8 +39,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FilterFactory {
 
     private final AtomicInteger id = new AtomicInteger();
-    private final DefineableClassLoader classLoader;
+    private final LoadingCache<Class<?>, DefineableClassLoader> clCache;
     private final LoadingCache<Method, Class<? extends EventFilter>> cache = CacheBuilder.newBuilder()
+    		.weakKeys()   // !!
             .concurrencyLevel(1).weakValues().build(new CacheLoader<Method, Class<? extends EventFilter>>() {
 
                 @Override
@@ -50,11 +51,11 @@ public class FilterFactory {
             });
     private final String targetPackage;
 
-    public FilterFactory(String targetPackage, DefineableClassLoader classLoader) {
+    public FilterFactory(String targetPackage, LoadingCache<Class<?>, DefineableClassLoader> clCache) {
         checkNotNull(targetPackage, "targetPackage");
         checkArgument(!targetPackage.isEmpty(), "targetPackage cannot be empty");
         this.targetPackage = targetPackage + '.';
-        this.classLoader = checkNotNull(classLoader, "classLoader");
+        this.clCache = clCache;
     }
 
     public Class<? extends EventFilter> createFilter(Method method) throws Exception {
@@ -71,7 +72,8 @@ public class FilterFactory {
         String name = this.targetPackage + eventClass.getSimpleName() + "Filter_" + handle.getSimpleName() + '_'
                 + method.getName() + this.id.incrementAndGet();
         byte[] cls = FilterGenerator.getInstance().generateClass(name, method);
-        return this.classLoader.defineClass(name, cls);
+        DefineableClassLoader classLoader = clCache.getUnchecked(method.getDeclaringClass());
+        return classLoader.defineClass(name, cls);
     }
 
 }

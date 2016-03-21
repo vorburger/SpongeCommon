@@ -7,7 +7,7 @@ evaluationDependsOn common.path
 // Apply shared ForgeGradle configuration
 apply from: common.file('gradle/minecraft.gradle')
 
-ext.apiSuffix = (api.version - '-SNAPSHOT') + '-BETA'
+ext.apiSuffix = (api.version - '-SNAPSHOT') + '-HoTea.vorburger.ch-BETA'
 
 dependencies {
     compile common

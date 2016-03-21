@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -65,9 +66,19 @@ public class SpongeEventManager implements EventManager {
     private final Object lock = new Object();
 
     private final PluginManager pluginManager;
-    private final DefineableClassLoader classLoader = new DefineableClassLoader(getClass().getClassLoader());
+    private final LoadingCache<Class<?>, DefineableClassLoader> clCache = CacheBuilder.newBuilder()
+            .concurrencyLevel(1)
+            .weakKeys()   // !!
+            .weakValues()
+            .build(new CacheLoader<Class<?>, DefineableClassLoader>() {
+
+				@Override
+				public DefineableClassLoader load(Class<?> key) throws Exception {
+					return new DefineableClassLoader(key.getClassLoader());
+				}
+            });
     private final AnnotatedEventListener.Factory handlerFactory = new ClassEventListenerFactory("org.spongepowered.common.event.listener",
-            new FilterFactory("org.spongepowered.common.event.filters", classLoader), classLoader);
+            new FilterFactory("org.spongepowered.common.event.filters", clCache), clCache);
     private final Multimap<Class<?>, RegisteredListener<?>> handlersByEvent = HashMultimap.create();
     private final Set<Object> registeredListeners = Sets.newHashSet();
 
@@ -277,4 +288,12 @@ public class SpongeEventManager implements EventManager {
         return post(event, getHandlerCache(event).getListenersByOrder(order));
     }
 
+    
+    // HotPluginManager
+    
+    public boolean post(Event event, PluginContainer plugin) {
+    	List<RegisteredListener<?>> allListeners = getHandlerCache(event).getListeners();
+		List<RegisteredListener<?>> onlyGivenPluginListeners = allListeners.stream().filter(l -> plugin.equals(l.getPlugin())).collect(Collectors.toList());
+		return post(event, onlyGivenPluginListeners);
+    }
 }

@@ -73,9 +73,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ClassEventListenerFactory implements AnnotatedEventListener.Factory {
 
     private final AtomicInteger id = new AtomicInteger();
-    private final DefineableClassLoader classLoader;
+    private final LoadingCache<Class<?>, DefineableClassLoader> clCache;
     private final LoadingCache<Method, Class<? extends AnnotatedEventListener>> cache = CacheBuilder.newBuilder()
             .concurrencyLevel(1)
+            .weakKeys()   // !!
             .weakValues()
             .build(new CacheLoader<Method, Class<? extends AnnotatedEventListener>>() {
 
@@ -88,12 +89,12 @@ public final class ClassEventListenerFactory implements AnnotatedEventListener.F
 
     private final String targetPackage;
 
-    public ClassEventListenerFactory(String targetPackage, FilterFactory factory, DefineableClassLoader classLoader) {
+    public ClassEventListenerFactory(String targetPackage, FilterFactory factory, LoadingCache<Class<?>, DefineableClassLoader> clCache) {
         checkNotNull(targetPackage, "targetPackage");
         checkArgument(!targetPackage.isEmpty(), "targetPackage cannot be empty");
         this.targetPackage = targetPackage + '.';
         this.filterFactory = checkNotNull(factory, "filterFactory");
-        this.classLoader = checkNotNull(classLoader, "classLoader");
+        this.clCache = checkNotNull(clCache, "checkNotNull");
     }
 
     @Override
@@ -115,11 +116,12 @@ public final class ClassEventListenerFactory implements AnnotatedEventListener.F
             // basic sanity check
             throw new IllegalStateException("Failed to generate EventFilter for non trivial filtering operation.");
         }
+        DefineableClassLoader classLoader = clCache.get(method.getDeclaringClass());
         if (filter != null) {
             filter.newInstance();
-            return this.classLoader.defineClass(name, generateClass(name, handle, method, eventClass, filter));
+            return classLoader.defineClass(name, generateClass(name, handle, method, eventClass, filter));
         } else {
-            return this.classLoader.defineClass(name, generateClass(name, handle, method, eventClass));
+            return classLoader.defineClass(name, generateClass(name, handle, method, eventClass));
         }
     }
 
